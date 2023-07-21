@@ -38,9 +38,10 @@ def upload_files(audiofile_1 : bytes = File(), audiofile_2 : bytes = File()):
     y1, sr1 = librosa.load(io.BytesIO(audiofile_1), mono=True, duration=1)
     y2, sr2 = librosa.load(io.BytesIO(audiofile_2), mono=True, duration=1)
     #extracting of features
-    audio_1_features = np.asarray(my_dataset.get_features(y1, sr1)).reshape(-1, 1)
-    audio_2_features = np.asarray(my_dataset.get_features(y2, sr2)).reshape(-1, 1)
-    audio_features = [np.concatenate([audio_1_features, audio_2_features])]
+    audio_1_features = my_dataset.get_features(y1, sr1)
+    audio_2_features = my_dataset.get_features(y2, sr2)
+    audio_1_features.extend(audio_2_features)
+    audio_features = np.asarray([audio_1_features])
     #reading dataset to dataframe
     data = pd.read_csv('data/dataset_1.csv', encoding='cp1251')
     #extracting feature table (Х), and labels table (у)
