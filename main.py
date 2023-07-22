@@ -40,6 +40,7 @@ def upload_files(audiofile_1 : bytes = File(), audiofile_2 : bytes = File()):
     #extracting of features
     audio_1_features = my_dataset.get_features(y1, sr1)
     audio_2_features = my_dataset.get_features(y2, sr2)
+    audio_1_features_copy = audio_1_features
     audio_1_features.extend(audio_2_features)
     audio_features = np.asarray([audio_1_features])
     #reading dataset to dataframe
@@ -58,7 +59,7 @@ def upload_files(audiofile_1 : bytes = File(), audiofile_2 : bytes = File()):
     # output result
     #print("KNeighborsClassifier")
     print("Train set Accuracy: ", metrics.accuracy_score(y, model.predict(X)))
-    similarity = round(100 - mean_absolute_percentage_error(audio_1_features, audio_2_features))
+    similarity = round(100 - mean_absolute_percentage_error(audio_1_features_copy, audio_2_features))
     label = False
     if y_pred[0] == 1:
         label = True
