@@ -5,6 +5,7 @@ import numpy as np
 
 import pandas as pd
 import scipy
+from sklearn.metrics import mean_absolute_percentage_error
 
 N_MFCC = 20
 
@@ -70,18 +71,10 @@ def feature_table_to_dataset(dataset_file_name, table_file_name):
             for f2 in features.values:
                 dir1, dir2 = f1[0], f2[0]
                 fname1, fname2 = f1[1], f2[1]
-                if dir1 != dir2:
-                    continue
-                if dir1 == dir2 and fname1 == fname2:
-                    continue
                 row = []
                 row.extend([fname1, fname2])
                 row.extend(f1[2:])
                 row.extend(f2[2:])
-                if dir1 != dir2:
-                    label = 0
-                elif dir1 == dir2:
-                    label = find_match(fname1, fname2)
+                label = round(100 - mean_absolute_percentage_error(f1[2:], f2[2:]))
                 row.append(label)
                 writer.writerow(row)
-

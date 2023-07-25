@@ -40,17 +40,16 @@ model = my_model.create_and_fit_model()
 app = FastAPI(title="SoundRecognition")
 @app.post("files/upload-files")
 def upload_files(audio_1_features, audio_2_features):
-    similarity = round(100 - mean_absolute_percentage_error(audio_1_features, audio_2_features))
     audio_1_features.extend(audio_2_features)
     audio_features = np.asarray([audio_1_features])
     # get prediction of the model
     y_pred = model.predict([audio_features])
     # output result
-    if y_pred[0] == 1:
+    if y_pred[0] >= 0.5:
         label = True
     else:
         label = False
-    return {'Access': label, 'Similarity': similarity}
+    return {'Access': label, 'Similarity': y_pred[0]}
 
 
 """
